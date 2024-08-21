@@ -1,0 +1,43 @@
+backend documentation:
+
+auth_views.py
+
+-> includes viewsets:
+    - shopping cart
+    - invoices
+    - orders
+    - repairs
+    - checkout
+
+checkout viewset ->
+    requires perm = is_authenticated
+    
+    class mro ->
+        - orders
+        - repairs
+        - shopping cart
+        - gocardless integration
+        - bobgo integration
+        - default cache mixin
+        - temp mixin
+
+    class attributes ->
+        - checkout_backend_load
+        - checkout_on_load
+        - checkout_instance_super
+
+    temp attributes ->
+        - checkout_instance_type
+        - checkout_items
+        - checkout_instance_model
+        - checkout_instance_serializer
+        - checkout_id_field
+        - checkout_instance
+        - checkout_instance_id
+        - checkout_user_address
+        - checkout_instance_user_details
+        - checkout_saved_instance
+        - checked_ex_unit
+        - contains_ex
+        - checkout_instance_action
+        - checkout_instance_initial

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title></title>
+        <link rel="icon" type="image/x-icon" href="public/global_assets/logo_assets/Simplified_ver_white_border_square.png">
+        <!-- Bootstrap -->
+        <link href="public/bootstrap.min.css" rel="stylesheet">
+        <!-- FontAwesome Icons -->
+        <link href="public/all.min.css" rel="stylesheet">
+        <!-- Our Files -->
+        <link href="public/nav.css" rel="stylesheet">
+	    <link href="public/global.css" rel="stylesheet">
+	    <link href="public/global_2.css" rel="stylesheet">
+	    <link href="public/checkout.css" rel="stylesheet">
+        <link href="public/products.css" rel="stylesheet">
+	    <script src="public/jquery.min.js"></script>
+
+        <!--
+        :~-._                                                 _.-~:
+        : :.~^o._        ________---------________        _.o^~.:.:
+        : ::.`?88booo~~~.::::::::...::::::::::::..~~oood88P'.::.:
+        :  ::: `?88P .:::....         ........:::::. ?88P' :::. :
+        :  :::. `? .::.            . ...........:::. P' .:::. :
+        :  :::   ... ..  ...       .. .::::......::.   :::. :
+        `  :' .... ..  .:::::.     . ..:::::::....:::.  `: .'
+            :..    ____:::::::::.  . . ....:::::::::____  ... :
+        :... `:~    ^~-:::::..  .........:::::-~^    ~::.::::
+        `.::. `\   (8)  \b:::..::.:.:::::::d/  (8)   /'.::::'
+            ::::.  ~-._v    |b.::::::::::::::d|    v_.-~..:::::
+            `.:::::... ~~^?888b..:::::::::::d888P^~...::::::::'
+            `.::::::::::....~~~ .:::::::::~~~:::::::::::::::'
+            `..:::::::::::   .   ....::::    ::::::::::::,'
+                `. .:::::::    .      .::::.    ::::::::'.'
+                `._ .:::    .        :::::.    :::::_.'
+                    `-. :    .        :::::      :,-'
+                        :.   :___     .:::___   .::
+            ..--~~~~--:+::. ~~^?b..:::dP^~~.::++:--~~~~--..
+                ___....--`+:::.    `~8~'    .:::+'--....___
+            ~~   __..---`_=:: ___gd8bg___ :==_'---..__   ~~
+            -~~~  _.--~~`-.~~~~~~~~~~~~~~~,-' ~~--._ ~~~-
+                -~~            ~~~~~~~~~             ~~-
+        -->
+    </head>
+
+    <body>
+        <!-- body code goes here -->
+        
+        <!-- my account orders page start -->
+        <div class="container-fluid">
+            <div class="container">
+                <div class="container">
+                    <div class="d-flex flex-column-reverse flex-sm-column-reverse flex-md-row flex-lg-row flex-xl-row">
+                        <div class="p-2">
+                            <h1 class="global_font_1 global_header_1">CHECKOUT</h1>
+                        </div>
+                        <div class="p-2 ml-auto global_font_3">
+                            <button type="button" class="btn global_remove_shadow global_white_select_btn"><i class="fa-solid fa-cart-shopping"></i> BACK TO CHECKOUT</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xl-8">
+                        <div class="modal fade" id="checkout_payment_change_popup" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="container">
+                                        <h4 class="global_font_2">SELECT BANK ACCOUNT</h4>
+                                        <div class="container" id="checkout_payment_bank_account_cont">
+                                            <div class="container checkout_payment_bank_account_indi_item">
+                                                <p>yata yata</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row">
+                                            <div class="p-2 ml-auto">
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_create_new">CREATE NEW</button>
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_submit">SUBMIT</button>
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_close">CLOSE</button>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="container">
+                                        <h4 class="global_font_2">ENTER BILLING DETAILS</h4>
+                                        <div class="container">
+                                            <div class="form-group text-left">
+                                                <label for="checkout_payment_create_new_address_line_1_input" class="global_font_3">ADDRESS LINE 1</label>
+                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_address_line_1_input">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col text-left">
+                                                    <label for="checkout_payment_create_new_city_input" class="global_font_3">CITY</label>
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_city_input">
+                                                </div>
+                                                <div class="col text-left">
+                                                    <label for="checkout_payment_create_new_region_input" class="global_font_3">REGION</label>
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_region_input">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col text-left">
+                                                    <label for="checkout_payment_create_new_postal_code_input" class="global_font_3">POSTAL CODE</label>
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_postal_code_input">
+                                                </div>
+                                                <div class="col text-left">
+                                                    <label for="checkout_payment_create_new_country_code_input" class="global_font_3">COUNTRY CODE</label>
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_country_code_input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row">
+                                            <div class="p-2 ml-auto">
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_next">NEXT</button>
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_close">CLOSE</button>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="container">
+                                        <h4 class="global_font_2">ENTER ACCOUNT DETAILS</h4>
+                                        <div class="container">
+                                            <div class="form-group text-left">
+                                                <label for="checkout_payment_create_new_acc_holder_name_input">ACCOUNT HOLDER NAME</label>
+                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_acc_holder_name_input">
+                                            </div>
+                                            <div class="form-group text-left">
+                                                <label for="checkout_payment_create_new_acc_number_input">ACCOUNT NUMBER</label>
+                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_acc_number_input">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col text-left">
+                                                    <label for="checkout_payment_create_new_bank_code_input" class="global_font_3">BANK CODE</label>
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_bank_code_input">
+                                                </div>
+                                                <div class="col text-left">
+                                                    <label for="checkout_payment_create_new_branch_code_input" class="global_font_3">BRANCH CODE</label>
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_branch_code_input">
+                                                </div>
+                                            </div>
+                                            <div class="form-group text-left">
+                                                <label for="checkout_payment_create_new_country_code_input">COUNTRY CODE</label>
+                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_country_code_input">
+                                            </div>
+                                            <div class="form-check custom-control custom-checkbox text-left">
+                                                <input class="form-check-input custom-control-input" type="checkbox" value="True" id="checkout_payment_create_use_iban_check">
+                                                <label class="form-check-label form_header_2 custom-control-label" for="checkout_payment_create_use_iban_check">LET ME USE IBAN INSTEAD</label>
+                                            </div>
+                                            <div class="form-group text-left">
+                                                <label for="checkout_payment_create_new_iban_number_input">IBAN NUMBER</label>
+                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_iban_number_input">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row">
+                                            <div class="p-2 ml-auto">
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_next">NEXT</button>
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_close">CLOSE</button>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="container">
+                                        <h4 class="global_font_2">REVIEW ACCOUNT DETAILS</h4>
+                                        <div class="container">
+                                            <div class="container">
+                                                <p>BILLING DETAILS:</p>
+                                                <p>ADDRESS LINE 1:<br></p>
+                                                <p>CITY: <br></p>
+                                                <p>REGION: <br></p>
+                                                <p>POSTAL CODE: <br></p>
+                                                <p>COUNTRY CODE: <br></p>
+                                            </div>
+                                            <hr />
+                                            <div class="container">
+                                                <p>BANK ACCOUNT DETAILS:</p>
+                                                <p>ACCOUNT HOLDER NAME: <br></p>
+                                                <p>ACCOUNT NUMBER: <br></p>
+                                                <p>BANK CODE: <br></p>
+                                                <p>BRANCH CODE: <br></p>
+                                                <p>IBAN NUMBER: <br></p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row">
+                                            <div class="p-2 ml-auto">
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_submit">SUBMIT</button>
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_close">CLOSE</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container global_font_3 checkout_payment_bank_account_cont">
+                            <div class="d-flex flex-row checkout_payment_bank_account_header_btn_cont">
+                                <div class="p-2 checkout_payment_bank_account_header_cont">
+                                    <h2 class="global_font_2">BANK ACCOUNT</h2>
+                                </div>
+                                <div class="p-2 ml-auto">
+                                    <button type="button" class="btn global_remove_shadow global_white_select_btn" id="checkout_payment_bank_account_change">CHANGE</button>
+                                </div>
+                            </div>
+                            <div class="container checkout_payment_bank_account" data-bank-account-id="2">
+                                <p>name</p>
+                                <p>yata yata<br>
+                                yata yata</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="col checkout_summary_col">
+					<div class="container checkout_summary_cont global_red_summary global_font_3">
+						<h2 class="global_font_2 checkout_summary_header">CHECKOUT SUMMARY</h2>
+						<p class="global_font_4 global_font_italic checkout_summary_subheader">(including shipping)</p>
+						<table class="table checkout_summary_table">
+                            <tbody>
+                                <tr class="checkout_summary_table_row"> 
+                                    <td class="checkout_summary_table_head" id="checkout_summary_quantity">2 ITEMS</td>
+                                    <td class="checkout_summary_table_data" id="checkout_summary_subtotal_excl">R12000</td>
+                                </tr>
+                                <tr class="checkout_summary_table_row">
+                                    <td class="checkout_summary_table_head">SHIPPING</td>
+                                    <td class="checkout_summary_table_data" id="checkout_summary_shipping">R55</td>
+                                </tr>
+                                <tr class="checkout_summary_table_row">
+                                    <td class="checkout_summary_table_head">SUBTOTAL</td>
+                                    <td class="checkout_summary_table_data" id="checkout_summary_subtotal_incl">R12055</td>
+                                </tr>
+								<tr class="checkout_summary_table_row">
+                                    <td class="checkout_summary_table_head">VAT (15%)</td>
+                                    <td class="checkout_summary_table_data" id="checkout_summary_vat">1808.25</td>
+                                </tr>
+                                <tr class="checkout_summary_table_row">
+                                    <td class="checkout_summary_table_blank"></td>
+                                    <td class="checkout_summary_table_blank"></td>
+                                </tr>
+                                <tr class="checkout_summary_table_row">
+                                    <td class="checkout_summary_table_head">TOTAL:</td>
+                                    <td class="checkout_summary_table_data checkout_summary_table_total_data" id="checkout_summary_total">R13863.25</td>
+                                </tr>
+                            </tbody>
+						</table>
+						<button type="button" class="btn global_remove_shadow global_black_select_btn_1 checkout_summary_payment_btn">PAY</button>
+						<p class="checkout_payment_message"></p>
+					</div>
+					
+				</div>
+            </div>
+        </div>
+        <!-- my account orders page end -->
+      
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="public/popper.min.js"></script>
+        <script src="public/bootstrap.min.js"></script>
+        <script src="public/all.min.js"></script>
+    </body>
+
+</html>

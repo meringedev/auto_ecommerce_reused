@@ -250,12 +250,11 @@ $('checkout_exchange_unit_upload').on('change', () => {
 
 $('.checkout_exchange_unit_photo_file_remove').on('click', () => {
     const popup = '#checkout_exchange_unit_file_delete';
-    const btn = '#checkout_change_delivery_address_cont';
     $(popup).modal('show');
     const current_file = $(this).parent();
     const user_filename = current_file.data('user-filename');
     const file_status = current_file.data('file-status');
-    $(`${btn}_submit`).on('click', () => {
+    $(`${popup}_submit`).on('click', () => {
         if (file_status === 'current') {
             const internal_filename = current_file.data('internal-filename')
             const axios_url = `${global.ngrok_api_url}/upload?filename=${internal_filename}`;
@@ -275,6 +274,10 @@ $('.checkout_exchange_unit_photo_file_remove').on('click', () => {
             }
             current_file.remove();
         }
+        $(popup).modal('hide');
+    })
+    $(`${popup}_close`).on('click', () => {
+        $(popup).modal('hide');
     })
 })
 

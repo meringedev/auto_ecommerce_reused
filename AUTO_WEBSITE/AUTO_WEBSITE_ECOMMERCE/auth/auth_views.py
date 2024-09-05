@@ -465,18 +465,6 @@ class OrdersViewSet(custom_mixins.CommunicationViewSetMixin, custom_mixins.Defau
         queryset = super().list_cache(queryset=self.__parent_model.objects, user_id=request.user.user_id, extra_fields=request.query_params)
         serializer = self.__parent_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        
-    # @action(detail=True)
-    # def render_conf(self, request, **kwargs):
-    #     order_instance = kwargs.get('instance', None)
-    #     if order_instance is not None:
-    #         order_instance = self.__parent_serializer(order_instance)
-    #         cache = super().get_or_set(queryset=self.__child_model.objects.prefetch_related(self.def_prefetch_queryset), order_id=order_instance.pk, return_cache_name=True)
-    #         order_items_instance = cache[0]
-    #         order_items_serializer = self.__child_serializer(order_items_instance, many=True)
-    #         invoice_download_link = super().create_invoice(request, order_instance=order_instance, order_items_instance=order_items_instance, order_user_details=kwargs.get('user_details'))
-    #         data = {'order_details': order_instance.data, 'order_items': order_items_serializer.data, 'invoice_download_link': invoice_download_link}
-    #         return data
 
     def render_conf(self, request, **kwargs):
         order_instance = kwargs.get('instance', None)
@@ -517,30 +505,6 @@ class OrdersViewSet(custom_mixins.CommunicationViewSetMixin, custom_mixins.Defau
         order_items_queryset = super().get_or_set(queryset=self.__child_model.objects.prefetch_related(self.def_prefetch_queryset), order_id=pk)
         if order_items_queryset is not None:
             return self.__child_serializer(order_items_queryset, many=True)
-
-    # def validate_exchange_unit_images(self, request, files, order_id):
-    #     paths = []
-    #     for filename in files:
-    #         filename = request.session[filename]
-    #         path = filename.get('path', None)
-    #         is_active = filename.get('is_active', False)
-    #         if path is not None:
-    #             default_storage.exists(path)
-    #             if True:
-    #                 if is_active:
-    #                     append = True
-    #                 else:
-    #                     default_storage.delete(path)
-    #                     append = True
-    #             else:
-    #                 if is_active:
-    #                     raise Exception
-    #                 else:
-    #                     append = True
-    #             if append is True:
-    #                 paths.append({'path': path, 'is_active': is_active})
-    #     request.session[f'ex_images_{order_id}'] = paths
-    #     return True
 
     def send_conf(self, request, **kwargs):
         kwargs['serializer_data'].pop('invoice_download_link', None)

@@ -1274,7 +1274,6 @@ class Checkout(OrdersViewSet, RepairsViewSet, ShoppingCartViewSet, external_api_
             request.session['checkout_transaction_status'] = 'running'
             self.checkout_backend_load = True
             temp = super().get_temp(request)
-            # self.__payment_initialize_data(request, temp=temp)
             self.__data_post_init(request, temp=temp)
             super().billing_request_process(request, temp=temp, obj_type='checkout_cancellation')
             if True:

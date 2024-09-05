@@ -4,10 +4,6 @@ from . import models
 
 class FileSerializer(serializers.Serializer):
     file = serializers.FileField()
-    file_type = serializers.CharField()
-    user_type = serializers.CharField()
-    instance_type = serializers.CharField()
-    instance_id = serializers.CharField(required=False, allow_blank=True)
 
 class HTMLEmailSerializer(serializers.Serializer):
     type_id = serializers.CharField(required=False, allow_blank=True, allow_null=True)

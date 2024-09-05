@@ -27,7 +27,8 @@ class CommunicationViewSetMixin():
 
     def __init__(self, **kwargs):
         self.__get_extra_init(**kwargs)
-        private = self.get_private(['parent_serializer', 'comm_history_serializer', 'obj_type', 'parent_id_field'])
+        get_private = kwargs.get('get_private', self.get_private)
+        private = get_private({'parent_serializer', 'comm_history_serializer', 'obj_type', 'parent_id_field'})
         self.parent_serializer = private[0]
         self.comm_history_serializer = private[1]
         self.obj_type = private[2]

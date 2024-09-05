@@ -88,8 +88,8 @@ const urls = {
         repair: {
             1: `${root}/auth/request_repair.html`
         },
-        redirect: {
-            1: `${root}/auth/checkout_redirect.html`
+        payment: {
+            1: `${root}/auth/checkout_payment.html`
         },
         cancel: {
             1: `${root}/auth/checkout_cancel.html`

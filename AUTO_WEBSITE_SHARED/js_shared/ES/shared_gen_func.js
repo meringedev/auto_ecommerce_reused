@@ -21,7 +21,7 @@ const gen_func = {
         const id = url.substring(url.lastIndexOf('/') + 1);
         let vals = [url, id];
         if (extract_param) {
-            const param = id.split('?')[1]
+            const param = id.split('?')[1];
             vals.push(param);
         }
         return vals;

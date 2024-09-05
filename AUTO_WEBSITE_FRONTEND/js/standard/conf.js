@@ -7,34 +7,45 @@ const {global} = require('../../config.js');
 
 let user_state = [false, false]
 
-$(() => {
-    user_state = check_user();
-    gen_func.return_auth_page(user_state, {render_1: main_load});
-})
+// $(() => {
+//     user_state = check_user();
+//     gen_func.return_auth_page(user_state, {render_1: main_load});
+// })
 
-function main_load() {
-    const url = gen_func.url_id_check();
-    const is_url = url[0];
-    if (is_url) {
-        const type = url[1];
-        const type_id = url[2];
-        const axios_url = `${global.ngrok_api_url}/auth/checkout/${type_id}/render-conf`;
-        axios.get(axios_url, global.options)
-        .then((res) => {
-            data = res.data;
-            $('.conf_default_message_cont').hide();
-            if (type === 'repair') {
-                load_repair_items(data.product_id);
-            }
-            else {
-                load_order_items(data.order_items);
-            }
-            load_details(data, type, type_id);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
+// function main_load() {
+//     const url = gen_func.url_id_check();
+//     const is_url = url[0];
+//     if (is_url) {
+//         const type = url[1];
+//         const type_id = url[2];
+//         const axios_url = `${global.ngrok_api_url}/auth/checkout/${type_id}/render-conf`;
+//         axios.get(axios_url, global.options)
+//         .then((res) => {
+//             data = res.data;
+//             $('.conf_default_message_cont').hide();
+//             if (type === 'repair') {
+//                 load_repair_items(data.product_id);
+//             }
+//             else {
+//                 load_order_items(data.order_items);
+//             }
+//             load_details(data, type, type_id);
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//         })
+//     }
+// }
+
+function conf_main_load(data, args) {
+    const type = args.module_type;
+    $('.conf_default_message_cont').hide();
+    if (type === 'repair') {
+        load_repair_items(data.product_id);
+    } else {
+        load_order_items(data.order_items);
     }
+    load_details(data, type);
 }
 
 function load_order_items(data) {
@@ -84,9 +95,10 @@ function load_repair_items(data) {
     repair_conf_repair_items_cont.append(html);
 }
 
-function load_details(data, type, type_id) {
+function load_details(data, type) {
+    const details = gen_func.get_prop(data, `${type}_details`);
+    const type_id = gen_func.get_prop(details, `${type}_id`);
     $('.conf_id').text(type_id);
-    let details = get_prop_by_string(data, `${type}_details`);
     let prefix;
     let shipping_price;
     if (type === 'repair') {
@@ -134,3 +146,5 @@ function load_shipping_details_ov(data) {
         $('.conf_address_cont').append(address_html);
     }
 }
+
+export {conf_main_load}

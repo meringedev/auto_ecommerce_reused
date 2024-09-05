@@ -67,7 +67,7 @@
                         <div class="modal fade" id="checkout_payment_change_popup" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
-                                    <div class="container">
+                                    <div class="container" data-page-index="1">
                                         <h4 class="global_font_2">SELECT BANK ACCOUNT</h4>
                                         <div class="container" id="checkout_payment_bank_account_cont">
                                             <div class="container checkout_payment_bank_account_indi_item">
@@ -78,113 +78,115 @@
                                             <div class="p-2 ml-auto">
                                                 <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_create_new">CREATE NEW</button>
                                                 <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_submit">SUBMIT</button>
-                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_close">CLOSE</button>
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow checkout_payment_change_bank_account_cont_close">CLOSE</button>
                                             </div>
                                         </div>
                                     </div>
         
-                                    <div class="container">
+                                    <div class="container" id="checkout_payment_create_new_bd_cont">
                                         <h4 class="global_font_2">ENTER BILLING DETAILS</h4>
                                         <div class="container">
                                             <div class="form-group text-left">
                                                 <label for="checkout_payment_create_new_address_line_1_input" class="global_font_3">ADDRESS LINE 1</label>
-                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_address_line_1_input">
+                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_bd_input" id="checkout_payment_create_new_address_line_1_input" name="gc_address_line_1">
                                             </div>
                                             <div class="row">
                                                 <div class="col text-left">
                                                     <label for="checkout_payment_create_new_city_input" class="global_font_3">CITY</label>
-                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_city_input">
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_bd_input" id="checkout_payment_create_new_city_input" name="gc_city">
                                                 </div>
                                                 <div class="col text-left">
                                                     <label for="checkout_payment_create_new_region_input" class="global_font_3">REGION</label>
-                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_region_input">
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_bd_input" id="checkout_payment_create_new_region_input" name="gc_reigon">
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col text-left">
                                                     <label for="checkout_payment_create_new_postal_code_input" class="global_font_3">POSTAL CODE</label>
-                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_postal_code_input">
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_bd_input" id="checkout_payment_create_new_postal_code_input" name="gc_postal_code">
                                                 </div>
                                                 <div class="col text-left">
                                                     <label for="checkout_payment_create_new_country_code_input" class="global_font_3">COUNTRY CODE</label>
-                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_country_code_input">
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_bd_input" id="checkout_payment_create_new_country_code_input" name="gc_country_code">
                                                 </div>
                                             </div>
+                                            <p class="checkout_payment_create_new_bd_message"></p>
                                         </div>
                                         <div class="d-flex flex-row">
                                             <div class="p-2 ml-auto">
-                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_next">NEXT</button>
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_create_new_bd_next">NEXT</button>
                                                 <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_close">CLOSE</button>
                                             </div>
                                         </div>
                                     </div>
         
-                                    <div class="container">
+                                    <div class="container" id="checkout_payment_create_new_ad_cont">
                                         <h4 class="global_font_2">ENTER ACCOUNT DETAILS</h4>
                                         <div class="container">
                                             <div class="form-group text-left">
                                                 <label for="checkout_payment_create_new_acc_holder_name_input">ACCOUNT HOLDER NAME</label>
-                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_acc_holder_name_input">
+                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_ad_input" name="gc_account_holder_name">
                                             </div>
                                             <div class="form-group text-left">
                                                 <label for="checkout_payment_create_new_acc_number_input">ACCOUNT NUMBER</label>
-                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_acc_number_input">
+                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_ad_input" name="gc_account_number">
                                             </div>
                                             <div class="row">
                                                 <div class="col text-left">
                                                     <label for="checkout_payment_create_new_bank_code_input" class="global_font_3">BANK CODE</label>
-                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_bank_code_input">
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_ad_input" name="gc_bank_code">
                                                 </div>
                                                 <div class="col text-left">
                                                     <label for="checkout_payment_create_new_branch_code_input" class="global_font_3">BRANCH CODE</label>
-                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_branch_code_input">
+                                                    <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_ad_input" name="gc_branch_code">
                                                 </div>
                                             </div>
                                             <div class="form-group text-left">
                                                 <label for="checkout_payment_create_new_country_code_input">COUNTRY CODE</label>
-                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_country_code_input">
+                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_ad_input" name="gc_country_code">
                                             </div>
                                             <div class="form-check custom-control custom-checkbox text-left">
-                                                <input class="form-check-input custom-control-input" type="checkbox" value="True" id="checkout_payment_create_use_iban_check">
+                                                <input class="form-check-input custom-control-input" type="checkbox" value="True" id="checkout_payment_create_ad_use_iban_check">
                                                 <label class="form-check-label form_header_2 custom-control-label" for="checkout_payment_create_use_iban_check">LET ME USE IBAN INSTEAD</label>
                                             </div>
-                                            <div class="form-group text-left">
+                                            <div class="form-group text-left" id="checkout_payment_create_new_ad_iban_cont">
                                                 <label for="checkout_payment_create_new_iban_number_input">IBAN NUMBER</label>
-                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input" id="checkout_payment_create_new_iban_number_input">
+                                                <input type="text" class="form-control global_remove_shadow global_font_4 global_text_input checkout_payment_create_new_ad_input_iban" name="gc_iban">
                                             </div>
                                         </div>
                                         <div class="d-flex flex-row">
                                             <div class="p-2 ml-auto">
-                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_next">NEXT</button>
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_create_new_ad_next">NEXT</button>
                                                 <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_close">CLOSE</button>
                                             </div>
                                         </div>
+                                        <p id="ad_message"></p>
                                     </div>
         
-                                    <div class="container">
+                                    <div class="container" id="checkout_payment_create_new_ra_cont">
                                         <h4 class="global_font_2">REVIEW ACCOUNT DETAILS</h4>
                                         <div class="container">
                                             <div class="container">
                                                 <p>BILLING DETAILS:</p>
-                                                <p>ADDRESS LINE 1:<br></p>
-                                                <p>CITY: <br></p>
-                                                <p>REGION: <br></p>
-                                                <p>POSTAL CODE: <br></p>
-                                                <p>COUNTRY CODE: <br></p>
+                                                <p>ADDRESS LINE 1: <span data-insert-values="gc_address_line_1"></span><br></p>
+                                                <p>CITY: <span data-insert-values="gc_city"></span><br></p>
+                                                <p>REGION: <span data-insert-values="gc_reigon"></span><br></p>
+                                                <p>POSTAL CODE: <span data-insert-values="gc_postal_code"></span><br></p>
+                                                <p>COUNTRY CODE: <span data-insert-values="gc_country_code"></span><br></p>
                                             </div>
                                             <hr />
                                             <div class="container">
                                                 <p>BANK ACCOUNT DETAILS:</p>
-                                                <p>ACCOUNT HOLDER NAME: <br></p>
-                                                <p>ACCOUNT NUMBER: <br></p>
-                                                <p>BANK CODE: <br></p>
-                                                <p>BRANCH CODE: <br></p>
-                                                <p>IBAN NUMBER: <br></p>
+                                                <p>ACCOUNT HOLDER NAME: <span data-insert-values="gc_account_holder_name"></span><br></p>
+                                                <p>ACCOUNT NUMBER: <span data-insert-values="gc_account_number"></span><br></p>
+                                                <p>BANK CODE: <span data-insert-values="gc_bank_code"></span><br></p>
+                                                <p>BRANCH CODE: <span data-insert-values="gc_branch_code"></span><br></p>
+                                                <p>IBAN NUMBER: <span data-insert-values="gc_iban"></span><br></p>
                                             </div>
                                         </div>
                                         <div class="d-flex flex-row">
                                             <div class="p-2 ml-auto">
-                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_submit">SUBMIT</button>
+                                                <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_new_ba_submit">SUBMIT</button>
                                                 <button type="button" class="btn global_red_select_btn_2 global_remove_shadow" id="checkout_payment_change_bank_account_cont_close">CLOSE</button>
                                             </div>
                                         </div>
@@ -245,7 +247,7 @@
                                 </tr>
                             </tbody>
 						</table>
-						<button type="button" class="btn global_remove_shadow global_black_select_btn_1 checkout_summary_payment_btn">PAY</button>
+						<button type="button" class="btn global_remove_shadow global_black_select_btn_1 checkout_summary_payment_btn" id="checkout_post_transaction_btn">PAY</button>
 						<p class="checkout_payment_message"></p>
 					</div>
 					

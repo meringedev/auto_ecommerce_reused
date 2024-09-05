@@ -3,11 +3,15 @@ const $ = require('jquery');
 import {gen_func} from '../shared/shared_gen_func';
 const {check_user} = require('./sens');
 const {global} = require('../../config.js');
+const {conf_main_load} = require('./conf');
 
-let is_saved = false;
-let module;
-let id = null;
-let params = null;
+window.attrs = {};
+
+attrs.is_saved = false;
+attrs.module_type = null;
+attrs.id = null;
+attrs.params = null;
+attrs.contains_ex = false;
 
 let user_state = [false, false];
 
@@ -16,23 +20,19 @@ $(() => {
     gen_func.return_auth_page(user_state, {render_1: main_load});
 })
 
+function get_module_url() {
+    let module_url;
+    if (attrs.is_saved) {
+        module_url = attrs.module_type + `/${attrs.id}`;
+    } else {
+        module_url = attrs.module_type;
+    }
+    return module_url
+}
+
 function main_load() {
-    const url = gen_func.url_id_check(true)
-    const is_id = url[0];
-    module = url[1];
-    let suffix = module;
-    if (is_id) {
-        id = url[2];
-        suffix = suffix + `/${id}`;
-        is_saved = true;
-    }
-    else {
-        if (module === 'repair') {
-            params = url[2];
-            suffix = suffix + `/?${params}`;
-        }
-    }
-    const axios_url = `${global.ngrok_api_url}/auth/checkout/${suffix}`;
+    checkout_url(window.attrs);
+    const axios_url = `${global.ngrok_api_url}/auth/checkout/${attrs.suffix}`;
     axios.get(axios_url, global.options)
     .then((res) => {
         const data = res.data;
@@ -42,7 +42,6 @@ function main_load() {
         const active_address = data.active_address.address_id;
         if (module_type === 'repair') {
             load_checkout_items(checkout_items, repair=true);
-            load_exchange_units(data.checkout_contains_ex);
             const repair_saved = ['reason_repair', 'error_codes'];
             for (let repair_val of repair_saved) {
                 const data_val = gen_func.get_prop(data, `saved_${repair_val}`);
@@ -53,6 +52,7 @@ function main_load() {
         }
         if (module_type === 'order') {
             load_checkout_items(checkout_items);
+            load_exchange_units(data.checkout_contains_ex);
         }
         load_checkout_total(checkout_total);
         load_user_addresses(user_addresses, active_address);
@@ -202,6 +202,17 @@ function load_checkout_total(data) {
 function load_exchange_units(data) {
     if (data === true) {
         $('.checkout_exchange_unit_cont').show();
+        window.attrs.contains_ex = true;
+        if (window.attrs.is_saved === true) {
+            const saved_files = gen_func.get_prop(data, 'saved_ex_unit_files');
+            for (let saved_file of saved_files) {
+                let user_filename = saved_file.user_filename;
+                let internal_filename = saved_file.order_ex_unit_filename
+                let html = `<p class="checkout_exchange_unit_photo_file_name global_font_italic" data-user-filename="${user_filename}" data-file-status="current" data-internal-filename="${internal_filename}">${user_filename}<button type="button" class="btn global_remove_shadow global_black_icon_btn checkout_exchange_unit_photo_file_remove"><i class="fa-solid fa-trash fa-sm"></i></button></p>`;
+                $(html).appendTo('.checkout_exchange_unit_photo_file_cont');
+                attrs.files_current.push(internal_filename);
+            }
+        }
     }
 }
 
@@ -222,56 +233,48 @@ function get_shipping_method(method_id, address_id=null) {
     })
 }
 
-$('#checkout_exchange_unit_upload').on('change', () => {
-    let form_data = new FormData();
-    let file_data = $(this).prop('files')[0];
-    let params = [
-        {'user_type': 'user'},
-        {'instance_type': 'order'},
-    ]
-    for (let param of params) {
-        form_data.append(param);
+if (attrs.contains_ex === true) {
+    attrs.files_to_upload = [];
+    // attrs.files_to_delete = [];
+    attrs.files_current = [];
+}
+
+$('checkout_exchange_unit_upload').on('change', () => {
+    const filelist = $(this).prop('files');
+    for (let file of filelist) {
+        attrs.files_to_upload.push(file);
+        let html = `<p class="checkout_exchange_unit_photo_file_name global_font_italic" data-user-filename="${file.name}" data-file-status="new">${file.name}<button type="button" class="btn global_remove_shadow global_black_icon_btn checkout_exchange_unit_photo_file_remove"><i class="fa-solid fa-trash fa-sm"></i></button></p>`;
+        $(html).appendTo('.checkout_exchange_unit_photo_file_cont');
     }
-    form_data.append('file', file_data);
-    axios.post(`${global.ngrok_api_url}/upload/`, form_data, global.options)
-    .then((res) => {
-        let status = res.status;
-        if (status === 200) {
-            let user_filename;
-            let filename = res.data.filename;
-            for (let [key, value] of form_data.entries()) {
-                if (value instanceof File) {
-                    user_filename = value.name;
-                }
-            }
-            let html =
-            `<p class="checkout_exchange_unit_photo_file_name global_font_italic" data-internal-filename="${filename}">${user_filename}<button type="button" class="btn global_remove_shadow global_black_icon_btn checkout_exchange_unit_photo_file_remove"><i class="fa-solid fa-trash fa-sm"></i></button></p>`
-            $('.checkout_exchange_unit_photo_file_cont').append(html);
-        }
-    })
 })
 
 $('.checkout_exchange_unit_photo_file_remove').on('click', () => {
-    let popup = '#checkout_exchange_unit_file_delete'
-    let btn = '#checkout_change_delivery_address_cont'
+    const popup = '#checkout_exchange_unit_file_delete';
+    const btn = '#checkout_change_delivery_address_cont';
     $(popup).modal('show');
-    let file = $(this).parent();
-    let internal_filename = file.data('internal-filename');
+    const current_file = $(this).parent();
+    const user_filename = current_file.data('user-filename');
+    const file_status = current_file.data('file-status');
     $(`${btn}_submit`).on('click', () => {
-        let axios_url = `${global.ngrok_api_url}/upload?filename=${internal_filename}`;
-        axios.delete(axios_url, global.options)
-        .then((res) => {
-            if (res.status === 200) {
-                file.hide();
+        if (file_status === 'current') {
+            const internal_filename = current_file.data('internal-filename')
+            const axios_url = `${global.ngrok_api_url}/upload?filename=${internal_filename}`;
+            axios.delete(axios_url, global.options)
+            .then((res) => {
+                current_file.remove();
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
+        if (file_status === 'new') {
+            for (let file of attrs.files_to_upload) {
+                if (file.name === user_filename) {
+                    attrs.files_to_upload.pop(file);
+                }
             }
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-        $(popup).modal('hide');
-    })
-    $(`${btn}_close`).on('click', () => {
-        $(popup).modal('hide');
+            current_file.remove();
+        }
     })
 })
 
@@ -327,58 +330,289 @@ $('#checkout_delivery_address_change_popup').on('click', () => {
     })
 })
 
-$('#checkout_summary_payment_btn').on('click', () => {
-    $('.checkout_payment_message').text('redirecting...');
+function get_extra_vals() {
     let data = {};
-    if (module === 'order') {
-        let exchange_unit = 'checkout_exchange_unit'
-        let exchange_unit_cont = `${exchange_unit}_cont`;
-        let filenames = [];
-        if ((exchange_unit_cont).is(':visible')) {
-            $(exchange_unit_cont).find(`${exchange_unit}_photo_file_cont`).children().each(() => {
-                filenames.push($(this).data('internal-filename'));
-            })
+    if (attrs.module_type === 'order') {
+        if (attrs.contains_ex) {
+            if (length(attrs.files_to_upload) !== 0) {
+                let url = `${global.ngrok_api_url}/upload/?user_type=user&instance_type=${attrs.module_type}`;
+                if (attrs.is_saved) {
+                    url = url + `&instance_id=${attrs.id}`;
+                }
+                let data = new FormData();
+                for (let file of attrs.files_to_upload) {
+                    data.append('file', file);
+                }
+                axios.post(url, data, global.options)
+                .then((res) => {
+                    res.data.filenames.forEach((filename) => {
+                        attrs.files_current.push(filename);
+                    })
+                })
+            }
+            data.append('ex_unit_images', attrs.files_current);
         }
-        data.append('ex_unit_images', filenames);
     }
-    if (module === 'repair') {
-        let inputs = ['#checkout_repair_reason_input', '#checkout_repair_error_code_input']
-        for (let input of inputs) {
-            let val = $(input).val();
-            let input_name = $(input).val();
-            if (val !== undefined || null) {
+    if (attrs.module_type === 'repair') {
+        const inputs = ['#checkout_repair_reason_input', '#checkout_repair_error_code_input'];
+        for (const input of inputs) {
+            const val = $(input).val();
+            const input_name =  $(input).data('input-name');
+            if (val === typeof 'undefined' || 'null') {
                 data.append(input_name, val);
             }
         }
     }
-    let shipping_method_id = $('.checkout_delivery_method_btns').find('active').data('shipping_method_id');
+    return data
+}
+
+function get_main_vals(extra_data=null) {
+    $('.checkout_payment_message').text('...redirecting');
+    let data = {};
+    if (extra_data !== null) {
+        data = {
+            ...extra_data
+        }
+    }
+    const shipping_method_id = $('.checkout_delivery_method_btns').find('active').data('shipping_method_id');
     data.append('shipping_method_id', shipping_method_id);
     if (shipping_method_id === 1) {
-        let shipping_address_id = $('.checkout_delivery_address').data('shipping-address-id')
+        const shipping_address_id = $('.checkout_delivery_address').data('shipping-address-id');
         data.append('shipping_address_id', shipping_address_id);
     }
-    if (is_saved) {
-        const module_url = module + `/${id}`;
-    }
-    else {
-        module_url = module;
-    }
-    let axios_url = `${global.ngrok_api_url}/auth/checkout/${module_url}/initialize/`;
-    if (params !== null) {
-        axios_url = axios_url + `?${params}`;
+
+    const module_url = get_module_url();
+
+    return [data, module_url]
+}
+
+function get_data() {
+    let data = get_extra_vals();
+    [data, module_url] = get_main_vals(data);
+
+    return [data, module_url]
+}
+
+$('#checkout_pre_transaction_btn').on('click', () => {
+    [data, module_url] = get_data(data);
+
+    let axios_url = `${global.ngrok_api_url}/auth/checkout/${module_url}/init/pre_transaction`;
+    if (attrs.params !== null) {
+        axios_url += `?${params}`;
     }
     axios.post(axios_url, data, global.options)
     .then((res) => {
-        if (res.status === 200) {
-            window.location.replace('/checkout_redirect');
-            let form_inputs_hidden = [];
-            for (let [key, value] of Object.entries(res.data)) {
-                html =
-                `<input type="hidden" name="${key}" value="${value}">`
-                form_inputs_hidden.push(html)
-            }
-            $('.checkout_payfast_form').append(form_inputs_hidden);
-        }
+        payment_load(res.data);
     })
 })
 
+$('#checkout_save').on('click', () => {
+    [data, module_url] = get_data(data);
+
+    let axios_url = `${global.ngrok_api_url}/auth/checkout/${module_url}/save`;
+    if (attrs.params !== null) {
+        axios_url += `?${params}`;
+    }
+    axios.post(axios_url, data, global.options)
+    .then((res) => {
+        if (res.data.message === 'saved!') {
+            window.location.replace('/shopping-cart');
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+})
+
+function payment_load(data) {
+    load_bank_accounts(data);
+    load_checkout_total(data);
+}
+
+function load_bank_accounts(data) {
+    bank_accounts = gen_func.get_prop(data, 'user_bank_accounts');
+    const main_cont = '#checkout_payment_bank_account_cont';
+    if (bank_accounts !== null) {
+        const excluded = ['user_id', 'gc_customer_id', 'gc_customer_bank_account_id'];
+        for (const account of bank_accounts) {
+            let render = [];
+            const html = $('.checkout_payment_bank_account_indi_item').clone();
+            for (const [key, value] of Object.entries(account)) {
+                if (value !== null) {
+                    if (!excluded.some(i => key.includes(i))) {
+                        render.push(`${value}<br>\n`);
+                    }
+                }
+            }
+            html.data('gc-customer-id', account.gc_customer_id);
+            html.data('gc-customer-bank-account-id', account.gc_customer_bank_account_id);
+            render = render.toString();
+            html.text(`<p>${render}</p>`);
+            html.show();
+            html.appendTo(main_cont);
+        }
+    } else {
+        const message = '<p>No bank accounts to show here!<br>Create a new one!</p>';
+        $(message).appendTo(main_cont);
+    }
+}
+
+$('#checkout_payment_bank_account_change').on('click', () => {
+    const popup_cont = '#checkout_payment_change_popup'
+    $(popup_cont).modal('show');
+    $('#checkout_payment_change_bank_account_cont_close').on('click', () => {
+        $('#checkout_payment_change_popup').modal('hide');
+    })
+    let gc_customer_id = null;
+    let gc_customer_bank_account_id = null;
+    $('.checkout_payment_bank_account_indi_item').on('click', () => {
+        $('.checkout_payment_bank_account_indi_item').removeClass('active');
+        $(this).addClass('active');
+        gc_customer_id = $(this).data('gc-customer-id');
+        gc_customer_bank_account_id = $(this).data('gc-customer-bank-account-id');
+    })
+    $('#checkout_payment_change_bank_account_cont_submit').on('click', () => {
+        attrs.bank_account_data = {
+            'gc_customer_id': gc_customer_id,
+            'gc_customer_bank_account_id': gc_customer_bank_account_id
+        }
+        $(popup_cont).modal('hide');
+    })
+    $('#checkout_payment_change_bank_account_cont_create_new').on('click', () => {
+        let has_errors = false;
+        const billing_details_cont = '#checkout_payment_create_new_bd_cont';
+        const account_details_cont = '#checkout_payment_create_new_ad_cont';
+        const review_details_cont = '#checkout_payment_create_new_ra_cont';
+        const message_cont = '.checkout_payment_create_new_bd_message';
+        const error_message = 'Mandatory fields not filled';
+        $(popup_cont).slideUp();
+        $(billing_details_cont).slideDown();
+        let billing_address_data = {};
+        let bank_account_data = {};
+        $('.checkout_payment_change_bank_account_cont_close').on('click', () => {
+            $(popup_cont).modal('hide');
+            billing_address_data = {};
+            bank_account_data = {};
+            $(`input:text`).val('');
+        })
+        $('#checkout_payment_create_new_bd_next').on('click', () => {
+            $('.checkout_payment_create_new_bd_input').each(() => {
+                const key = $(this).attr('name');
+                const val = $(this).val();
+                if (val !== '') {
+                    billing_address_data.append(key, val);
+                } else {
+                    has_errors = true;
+                }
+            })
+            if (has_errors !== true) {
+                $(billing_details_cont).slideUp();
+                $(account_details_cont).slideDown();
+                $(message_cont).text('');
+            } else {
+                billing_address_data = {};
+                $(message_cont).text(error_message);
+            }
+            if ($('#checkout_payment_create_ad_use_iban_check').is(':checked')) {
+                $('#checkout_payment_create_new_ad_iban_cont').show();
+                let is_iban = true;
+            } else {
+                is_iban = false;
+            }
+            $('#checkout_payment_create_new_ad_next').on('click', () => {
+                const excluded_ad = ['gc_account_number'];
+                $('.checkout_payment_create_new_bd_input').each(() => {
+                    const key = $(this).attr('name');
+                    const val = $(this).val();
+                    if (!excluded_ad.some(i => key.includes(i))) {
+                        if (is_iban === false) {
+                            if (val === '') {
+                                has_errors = true;
+                            }
+                        }
+                    }
+                    bank_account_data.append(key, val);
+                })
+                if (is_iban) {
+                    const iban_key = 'gc_iban';
+                    const iban_val = $(`input[name='${iban_key}']`).val();
+                    if (iban_val === '') {
+                        has_errors = true;
+                    }
+                }
+                if (has_errors !== true) {
+                    $(message_cont).text('');
+                    $(account_details_cont).slideUp();
+                    $(review_details_cont).slideDown();
+                    const combined_data = {
+                        ...billing_address_data,
+                        ...bank_account_data
+                    };
+                    for (const [key, value] of Object.entries(combined_data)) {
+                        review_details_cont.find(`[data-insert-item-value='${key}']`).text(value);
+                    }
+                } else {
+                    bank_account_data = {};
+                    $(message_cont).text(error_message);
+                }
+            })
+            $('#checkout_payment_change_new_ba_submit').on('click', () => {
+                attrs.bank_account_data = {
+                    'create_new_account': true,
+                    'gc_billing_details': billing_address_data,
+                    'gc_bank_account_data': bank_account_data
+                }
+                $(popup_cont).modal('hide');
+            })
+        })
+    })
+})
+
+function post_transaction() {
+    const data = attrs.bank_account_data;
+
+    const module_url = get_module_url();
+
+    const axios_url = `${global.ngrok_api_url}/auth/checkout/${module_url}/init/post_transaction`;
+    window.location.replace('/checkout/load');
+    axios.post(axios_url, data, global.options)
+    .then((res) => {
+        window.location.replace(`/checkout/conf/${attrs.module_type}`);
+        conf_load(res.data);
+    })
+    .catch((err) => {
+        console.log(err);
+        const data = err.res.data;
+        const flag = data.flag;
+        if (flag === 'cancelled') {
+            window.location.replace('/checkout/cancelled');
+            $('#checkout_payment_cancel_message').text(data.message);
+        }
+    })
+}
+
+$('#checkout_post_transaction_btn').on('click', () => {
+    post_transaction();
+})
+
+function output_message(data) {
+    $('#checkout_cancel_message').text(data.message);
+    $('#checkout_cancel_btn').remove();
+}
+
+$('#checkout_cancel_btn').on('click', () => {
+    const module_url = get_module_url();
+    const axios_url = `${global.ngrok_api_url}/auth/checkout/${module_url}/cancel_transaction`;
+    axios.post(axios_url, global.options)
+    .then((res) => {
+        output_message(res.data);
+    })
+    .catch((err) => {
+        console.log(err);
+        output_message(err.res.data);
+    })
+})
+
+function conf_load(data) {
+    conf_main_load(data, {module_type: attrs.module_type});
+}

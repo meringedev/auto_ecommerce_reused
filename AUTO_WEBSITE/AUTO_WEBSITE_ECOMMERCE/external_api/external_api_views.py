@@ -81,9 +81,8 @@ class GoCardlessIntegration(views.ViewSet):
                 inputted = request.data
                 billing_params['customer'] = inputted.get('gc_customer_id')
                 billing_params['customer_bank_account'] = inputted.get('gc_customer_bank_account_id')
-            global_var = kwargs.get('global_var', None)
             obj_type = kwargs.get('obj_type', None)
-            utils.check_task(global_var, obj_type)
+            utils.check_task(request, obj_type=obj_type)
             data = self.create_billing_request(request, temp=temp)
             main = data['billing_requests']
             billing_request_id = main['id']
@@ -95,15 +94,15 @@ class GoCardlessIntegration(views.ViewSet):
             default_params = {
                 'billing_request_id': billing_request_id
             }
-            utils.check_task(global_var, obj_type)
+            utils.check_task(request, obj_type=obj_type)
             if create_new_account:
                 default_params.update({'customer_id': customer_id})
                 if not customer_record_exist:
                     self.collect_customer_details(request, temp=temp, **default_params)
                 self.collect_bank_account_details(request, **default_params)
-                utils.check_task(global_var, obj_type)
+                utils.check_task(request, obj_type=obj_type)
             self.confirm_payer_details(request, **default_params)
-            utils.check_task(global_var, obj_type)
+            utils.check_task(request, obj_type=obj_type)
             self.fulfil_payment(request, temp=temp, **default_params)
             return True
 
@@ -237,7 +236,6 @@ class GoCardlessIntegration(views.ViewSet):
                 url = f'{self.base_url}/billing_requests/{billing_request_id}/actions/cancel'
                 requests.post(url=url, headers=self.headers)
                 return True
-    pass
 
 class GoCardlessIntegrationTaskOverride(GoCardlessIntegration, Task):
 

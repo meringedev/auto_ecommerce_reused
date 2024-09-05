@@ -83,6 +83,8 @@ class OrderSeq(models.Model):
 class OrderExUnitImages(models.Model):
     order_ex_unit_filename = models.CharField(max_length=45)
     order_id = models.ForeignKey(Orders, on_delete=models.CASCADE, db_column='order_id')
+    user_filename = models.CharField(max_length=45)
+    path = models.CharField(max_length=45)
 
     class Meta:
         managed = False

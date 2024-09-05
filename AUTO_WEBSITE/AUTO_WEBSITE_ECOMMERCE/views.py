@@ -15,49 +15,58 @@ class UploadView(views.APIView):
 
     def post(self, request):
         user = request.user
-        serializer = serializers.FileSerializer(data=request.data, many=True)
-        if serializer.is_valid(raise_exception=True):
-            try:
-                file = serializer.data['file']
-                user_type = serializer.data['user_type']
-                if user_type == 'user':
-                    user_prefix = f'user_id_{user.user_id}'
-                if user_type == 'admin':
-                    user_prefix = user_type
-                datetime = utils.return_date_and_time()
-                instance_type = serializer.data['instance_type']
-                instance_id = serializer.data.get('instance_id', None)
-                keywords = {
-                    'user': user_prefix,
-                    'instance_type': instance_type
-                }
-                file_type = serializer.data['file_type']
-                if instance_id is not None:
-                    folder = f'{instance_type}/{instance_id}/'
-                else:
-                    folder = f'temp/'
-                folder = f'{folder}{file_type}/'
-                filename = utils.generate_filename(datetime=datetime, **keywords)
-                path = f'{folder}{filename}'
-                request.session[filename] = {'path': path, 'is_active': True}
-                default_storage.save(path, ContentFile(file.read()))
-                return Response({'message': 'File Uploaded Successfully!', 'filename': filename}, status=status.HTTP_200_OK)
-            except Exception as e:
-                return Response({'message': e}, status=status.HTTP_400_BAD_REQUEST)
-
+        params = request.query_params
+        instance_type = params.get('instance_type', None)
+        instance_id = params.get('instance_id', None)
+        user_type = params.get('user_type', None)
+        if user_type is not None:
+            if instance_type is not None:
+                filenames = []
+                serializer = serializers.FileSerializer(data=request.data, many=True)
+                if serializer.is_valid(raise_exception=True):
+                    for data in serializer.data:
+                        file = data['file']
+                        if user_type == 'user':
+                            user_prefix = f'user_id_{user.user_id}'
+                        if user_type == 'admin':
+                            user_prefix = user_type
+                        datetime = utils.return_date_and_time()
+                        keywords = {
+                            'user': user_prefix,
+                            'instance_type': instance_type
+                        }
+                        file_type = data['file_type']
+                        if instance_id is not None:
+                            folder = f'{instance_type}/{instance_id}'
+                        else:
+                            folder = f'{instance_type}/temp/'
+                        folder = f'{folder}{file_type}'
+                        filename = utils.generate_filename(datetime=datetime, **keywords)
+                        path = f'{folder}{filename}'
+                        request.session[filename] = {
+                            'path': path,
+                            'user_filename': file.name,
+                            'status': 'new',
+                            'is_deleted': False
+                        }
+                        default_storage.save(path, ContentFile(file.read()))
+                        filenames.append(filename)
+                    return Response({'message': 'File Uploaded Successfully!', 'filenames': filenames}, status=status.HTTP_200_OK)
+        
     def delete(self, request):
         user = request.user
         filename = request.query_params.get('filename', None)
         if filename is not None:
-            filename = request.session['filename']
-            path = filename.get('path', None)
-            is_active = filename.get('is_active', False)
-            if (path is not None) and (is_active is True):
+            file = request.session[filename]
+            path = file.get('path', None)
+            if path is not None:
                 default_storage.exists(path)
                 if True:
                     default_storage.delete(path)
-                    request.session[filename] = {'path': path, 'is_active': False}
-                    return Response({'message': 'File Deleted Successfully!'}, status=status.HTTP_200_OK)
+                    file['status'] = 'deleted'
+                    file['is_deleted'] = True
+                    request.session[filename] = file
+                    pass
 
 class Test(views.APIView):
     def post(self, request):

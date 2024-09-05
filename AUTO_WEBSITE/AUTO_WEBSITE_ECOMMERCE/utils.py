@@ -123,6 +123,6 @@ def get_private(**kwargs):
         attr_values = attr_values[0]
     return attr_values
 
-def check_task(global_var, obj_type):
-    if global_var == 'cancelled':
-        raise UserActivatedException(obj_type)
+def check_task(request, **kwargs):
+    if request.session['checkout_transaction_status'] == 'cancelled':
+        raise UserActivatedException(kwargs.get('obj_type'))

@@ -13,6 +13,7 @@ ENV PATH /opt/node_app/node_modules/.bin$PATH
 
 COPY . .
 
-RUN mkdir /opt/node_app/media
+RUN mkdir -p /opt/node_app/js/shared
+RUN mkdir -p /opt/node_app/css/shared
 
 EXPOSE 8080

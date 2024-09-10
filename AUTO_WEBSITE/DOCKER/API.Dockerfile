@@ -12,8 +12,7 @@ RUN mkdir /code
 COPY . /code/
 WORKDIR /code
 
-RUN mkdir /code/media
-
+RUN mkdir -p /code/media
 
 RUN set -e; \
     /usr/local/bin/python -m pip install --upgrade pip ;\

@@ -17,7 +17,7 @@ from thefuzz import fuzz
 from statistics import mean
 from celery import Task
     
-class GoCardlessIntegration(views.ViewSet):
+class GoCardlessIntegration(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
     base_url = f'{settings.GC_URL}'
     headers = {

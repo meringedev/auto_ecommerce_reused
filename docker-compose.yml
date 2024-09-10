@@ -55,11 +55,9 @@ services:
     command: nodemon server.js
     volumes:
       - ./AUTO_WEBSITE_FRONTEND:/opt/node_app
-      - ./AUTO_WEBSITE_MEDIA:/opt/node_app/media
       - ./AUTO_WEBSITE_SHARED/esbuild_js_shared:/opt/node_app/esbuild_js/shared
       - ./AUTO_WEBSITE_SHARED/js_shared:/opt/node_app/js/shared
       - ./AUTO_WEBSITE_SHARED/css_shared:/opt/node_app/css/shared
-      - ./AUTO_WEBSITE_SHARED/html_shared:/opt/node_app/html/shared
       - ./AUTO_WEBSITE_SHARED/assets_shared:/opt/node_app/assets/shared
       - /opt/node_app/node_modules/
     ports:
@@ -73,11 +71,9 @@ services:
     command: nodemon server.js
     volumes:
       - ./AUTO_WEBSITE_ADMIN:/opt/node_app
-      - ./AUTO_WEBSITE_MEDIA:/opt/node_app/media
       - ./AUTO_WEBSITE_SHARED/esbuild_js_shared:/opt/node_app/esbuild_js/shared
       - ./AUTO_WEBSITE_SHARED/js_shared:/opt/node_app/js/shared
       - ./AUTO_WEBSITE_SHARED/css_shared:/opt/node_app/css/shared
-      - ./AUTO_WEBSITE_SHARED/html_shared:/opt/node_app/html/shared
       - ./AUTO_WEBSITE_SHARED/assets_shared:/opt/node_app/assets/shared
       - /opt/node_app/node_modules/
     ports:
@@ -91,10 +87,8 @@ services:
     command: nodemon server.js
     volumes:
       - ./AUTO_WEBSITE_RENDER:/opt/node_app
-      - ./AUTO_WEBSITE_MEDIA:/opt/node_app/media
       - ./AUTO_WEBSITE_SHARED/js_shared:/opt/node_app/js/shared
       - ./AUTO_WEBSITE_SHARED/css_shared:/opt/node_app/css/shared
-      - ./AUTO_WEBSITE_SHARED/html_shared:/opt/node_app/html/shared
       - /opt/node_app/node_modules/
     ports:
       - 8070:8070
